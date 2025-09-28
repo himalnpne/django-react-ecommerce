@@ -12,7 +12,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-your-secret-key-here-change-in-production'
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.*']
+# ------------------------------
+# ALLOWED HOSTS
+# ------------------------------
+# Add to your ALLOWED_HOSTS
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'testserver',  # Add this for testing
+    '192.168.1.*',
+]
+
+# Append the current machine hostname
 hostname = socket.gethostname()
 ALLOWED_HOSTS.append(hostname)
 
@@ -95,14 +106,6 @@ DATABASES = {
     }
 }
 
-# Alternative SQLite fallback (uncomment if needed)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 # ------------------------------
 # AUTHENTICATION CONFIGURATION
 # ------------------------------
@@ -114,7 +117,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # Change to IsAuthenticatedOrReadOnly in production
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',

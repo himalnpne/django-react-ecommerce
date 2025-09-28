@@ -1,8 +1,9 @@
+# products/urls.py
 from django.urls import path
 from .views import (
     CategoryListCreateView, CategoryDetailView,
     ProductListCreateView, ProductDetailView,
-    PublicProductListView, PublicProductDetailView,
+    PublicProductListView, PublicProductDetailView, PublicCategoryListView,
     bulk_create_products, product_stats
 )
 
@@ -16,6 +17,7 @@ urlpatterns = [
     
     # Public endpoints (no authentication required)
     path('public/', PublicProductListView.as_view(), name='public-products'),
+    path('public/categories/', PublicCategoryListView.as_view(), name='public-categories'),
     path('public/<slug:slug>/', PublicProductDetailView.as_view(), name='public-product-detail'),
     path('stats/', product_stats, name='product-stats'),
 ]
