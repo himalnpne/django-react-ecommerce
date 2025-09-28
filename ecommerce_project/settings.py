@@ -1,12 +1,24 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+import socket
+
+# ------------------------------
+# BASE CONFIGURATION
+# ------------------------------
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-your-secret-key-here-change-in-production'
 DEBUG = True
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.*']
+hostname = socket.gethostname()
+ALLOWED_HOSTS.append(hostname)
+
+# ------------------------------
+# INSTALLED APPS
+# ------------------------------
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -15,15 +27,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-party apps
     'rest_framework',
-    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'django_filters',
+
+    # Local apps
     'accounts',
     'products',
     'orders',
     'cart',
 ]
+
+# ------------------------------
+# MIDDLEWARE
+# ------------------------------
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -35,6 +55,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# ------------------------------
+# URL CONFIGURATION
+# ------------------------------
 
 ROOT_URLCONF = 'ecommerce_project.urls'
 
@@ -56,7 +80,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecommerce_project.wsgi.application'
 
-# Database - Windows PostgreSQL configuration
+# ------------------------------
+# DATABASE CONFIGURATION
+# ------------------------------
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -68,7 +95,7 @@ DATABASES = {
     }
 }
 
-# Alternative SQLite database (if PostgreSQL fails)
+# Alternative SQLite fallback (uncomment if needed)
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -76,13 +103,18 @@ DATABASES = {
 #     }
 # }
 
-# REST Framework Configuration
+# ------------------------------
+# AUTHENTICATION CONFIGURATION
+# ------------------------------
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.AllowAny',  # Change to IsAuthenticatedOrReadOnly in production
     ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -93,34 +125,35 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 12,
 }
 
-# JWT Configuration
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
 }
 
-# CORS Configuration
+# ------------------------------
+# CORS CONFIGURATION
+# ------------------------------
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:8000",
 ]
 
-# Static files
+# ------------------------------
+# STATIC AND MEDIA FILES
+# ------------------------------
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Custom User Model
-AUTH_USER_MODEL = 'accounts.CustomUser'
+# ------------------------------
+# DEFAULT SETTINGS
+# ------------------------------
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Windows-specific settings
-import socket
-hostname = socket.gethostname()
-ALLOWED_HOSTS.append(hostname)
