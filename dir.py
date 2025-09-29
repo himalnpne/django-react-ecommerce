@@ -28,4 +28,4 @@ def print_dir_structure(path, max_depth=2, ignore_dirs=None, level=0):
 
 if __name__ == "__main__":
     base_path = "."  # Change to your desired starting path
-    print_dir_structure(base_path, max_depth=2)
+    print_dir_structure(base_path, max_depth=3)
